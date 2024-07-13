@@ -4,21 +4,19 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Attendee
-from .forms import AttendeeForm
+from .models import Attendee,StallVisit,Stall
+from django.contrib.auth import authenticate, login
+from .forms import AttendeeForm,StallKeeperLoginForm
+from django.contrib.auth.decorators import login_required
 import qrcode
 import uuid
 from django.conf import settings
 from django.http import JsonResponse
 
 def home(request):
-    return render(request, 'attendees/home.html')
-def generate_qr_code(request):
-    '''    unique_id = str(uuid.uuid4())
-    return render(request, 'attendees/qr_code.html', {'unique_id': unique_id})
-    img = qrcode.make(unique_id)
-    img.save(f"static/qr_codes/{unique_id}.png")'''
+    return render(request, 'attendees/index.html')
 
+def generate_qr_code(request):
     unique_id = str(uuid.uuid4())
     qr = qrcode.QRCode(
         version=1,
@@ -88,3 +86,34 @@ def already_arrived(request):
 
 def already_submitted(request):
     return render(request, 'attendees/already_submitted.html')
+
+@login_required
+def stall_keeper_login(request):
+    if request.method == 'POST':
+        form = StallKeeperLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('stall_dashboard')
+    else:
+        form = StallKeeperLoginForm()
+    return render(request, 'attendees/stall_keeper_login.html', {'form': form})
+
+@login_required
+def stall_dashboard(request):
+    return render(request, 'attendees/stall_dashboard.html')
+
+@login_required
+def scan_attendee(request, unique_id):
+    try:
+        attendee = Attendee.objects.get(unique_id=unique_id)
+        stall = Stall.objects.get(keeper=request.user)
+        StallVisit.objects.create(attendee=attendee, stall=stall)
+        return render(request, 'attendees/scan_success.html', {'attendee': attendee, 'stall': stall})
+    except Attendee.DoesNotExist:
+        return render(request, 'attendees/scan_failed.html', {'message': 'Attendee not found'})
+    except Stall.DoesNotExist:
+        return render(request, 'attendees/scan_failed.html', {'message': 'Stall not found'})

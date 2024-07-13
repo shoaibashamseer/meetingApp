@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 from django.db import models
 
@@ -16,3 +16,20 @@ class Attendee(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Stall(models.Model):
+    name = models.CharField(max_length=100)
+    keeper = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
+class StallVisit(models.Model):
+    attendee = models.ForeignKey(Attendee, on_delete=models.CASCADE)
+    stall = models.ForeignKey(Stall, on_delete=models.CASCADE)
+    visit_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.attendee.name} visited {self.stall.name}"

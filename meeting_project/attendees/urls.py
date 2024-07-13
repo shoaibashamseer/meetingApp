@@ -10,4 +10,7 @@ urlpatterns = [
     path('arrival_success/', views.arrival_success, name='arrival_success'),
     path('already_arrived/', views.already_arrived, name='already_arrived'),
     path('already_submitted/', views.already_submitted, name='already_submitted'),
+    path('stall_keeper_login/', views.stall_keeper_login, name='stall_keeper_login'),
+    path('stall_dashboard/', views.stall_dashboard, name='stall_dashboard'),
+    path('scan_attendee/<str:unique_id>/', views.scan_attendee, name='scan_attendee'),
 ]
