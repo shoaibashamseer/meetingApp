@@ -46,6 +46,16 @@ def generate_qr_code(request):
     '''return JsonResponse({'unique_id': unique_id,
                          'img_url': request.build_absolute_uri(settings.MEDIA_URL + 'qr_codes/' + f"{unique_id}.png")})'''
 
+
+def scan_qr(request):
+    # Handle QR code scanning logic to retrieve unique_id
+    # Example: Get unique_id from the QR code scanning process
+
+    unique_id = "your_unique_id_from_qr_scan"
+    # Redirect to the attendee_form view with the unique_id
+    return redirect('attendee_form', unique_id=unique_id)
+
+
 def attendee_form(request, unique_id):
     attendee = Attendee.objects.filter(unique_id=unique_id).first()
     if attendee:
@@ -117,3 +127,4 @@ def scan_attendee(request, unique_id):
         return render(request, 'attendees/scan_failed.html', {'message': 'Attendee not found'})
     except Stall.DoesNotExist:
         return render(request, 'attendees/scan_failed.html', {'message': 'Stall not found'})
+

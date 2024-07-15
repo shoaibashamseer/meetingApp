@@ -34,6 +34,7 @@
                     {{ form.prize.label_tag }}
                     {{ form.prize|add_class:"form-control" }}
                 </div>
+                 <input type="hidden" name="unique_id" value="{{ unique_id }}">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

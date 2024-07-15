@@ -12,7 +12,9 @@ class Attendee(models.Model):
     num_persons = models.IntegerField()
     prize = models.CharField(max_length=255, blank=True)
     arrived = models.BooleanField(default=False)
-    qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
+    #qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
+    qr_code = models.CharField(max_length=100,default='6f986337-2964-4dc2-859e-0e9859c35a97')  # Assuming the QR code is a string
+    email = models.EmailField(default='shobikunnariyath@gmail.com')
 
     def __str__(self):
         return self.name
