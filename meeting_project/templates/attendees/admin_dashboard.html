@@ -1,0 +1,73 @@
+{% extends 'attendees/index.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Watchman Dashboard</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Attendees</h4>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Place</th>
+                        <th>Job</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Name Verified</th>
+                        <th>Phone Verified</th>
+                        <th>Place Verified</th>
+                        <th>Job Verified</th>
+                        <th>Gender Verified</th>
+                        <th>Email Verified</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in attendees %}
+                    <tr>
+                        <td>{{ attendee.name }}</td>
+                        <td>{{ attendee.place }}</td>
+                        <td>{{ attendee.job }}</td>
+                        <td>{{ attendee.gender }}</td>
+                        <td>{{ attendee.phone }}</td>
+                        <td>{{ attendee.email }}</td>
+                        <td>{% if attendee.name_verified %}✔{% else %}✘{% endif %}</td>
+                        <td>{% if attendee.phone_verified %}✔{% else %}✘{% endif %}</td>
+                        <td>{% if attendee.place_verified %}✔{% else %}✘{% endif %}</td>
+                        <td>{% if attendee.job_verified %}✔{% else %}✘{% endif %}</td>
+                        <td>{% if attendee.gender_verified %}✔{% else %}✘{% endif %}</td>
+                        <td>{% if attendee.email_verified %}✔{% else %}✘{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12">
+            <h4>Persons</h4>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Attendee</th>
+                        <th>Arrived</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for person in persons %}
+                    <tr>
+                        <td>{{ person.name }}</td>
+                        <td>{{ person.age }}</td>
+                        <td>{{ person.gender }}</td>
+                        <td>{{ person.attendee.name }}</td>
+                        <td>{% if person.verified %}✔{% else %}✘{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

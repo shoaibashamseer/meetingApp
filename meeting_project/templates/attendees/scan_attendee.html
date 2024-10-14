@@ -1,0 +1,13 @@
+{% extends 'attendees/index.html' %}
+
+{% block title %}Scan Attendee{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <a href="{% url 'stall_dashboard' %}">Stall Dashboard</a>
+    <p>Welcome, {{ user.username }}!</p>
+    <p>Use the QR code scanner to register attendee visits.</p>
+    <a href="{% url 'scan_attendee' unique_id=unique_id %}">Scan Attendee</a>
+
+</div>

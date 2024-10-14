@@ -1,9 +1,7 @@
-{% extends 'attendees/home.html' %}
-
+{% extends 'attendees/index.html' %}
 {% load form_tags %}
 
 {% block title %}Attendee Form{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -11,31 +9,106 @@
             <form method="post" class="mt-4">
                 {% csrf_token %}
                 <div class="form-group">
-                    {{ form.name.label_tag }}
-                    {{ form.name|add_class:"form-control" }}
+                    {{ attendee_form.name.label_tag }}
+                    {{ attendee_form.name|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.name.errors }}</div>
                 </div>
                 <div class="form-group">
-                    {{ form.place.label_tag }}
-                    {{ form.place|add_class:"form-control" }}
+                    {{ attendee_form.place.label_tag }}
+                    {{ attendee_form.place|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.place.errors }}</div>
                 </div>
                 <div class="form-group">
-                    {{ form.job.label_tag }}
-                    {{ form.job|add_class:"form-control" }}
+                    {{ attendee_form.job.label_tag }}
+                    {{ attendee_form.job|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.job.errors }}</div>
                 </div>
                 <div class="form-group">
-                    {{ form.phone.label_tag }}
-                    {{ form.phone|add_class:"form-control" }}
+                    {{ attendee_form.gender.label_tag }}
+                    {{ attendee_form.gender|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.gender.errors }}</div>
                 </div>
                 <div class="form-group">
-                    {{ form.num_persons.label_tag }}
-                    {{ form.num_persons|add_class:"form-control" }}
+                    {{ attendee_form.phone.label_tag }}
+                    {{ attendee_form.phone|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.phone.errors }}</div>
                 </div>
                 <div class="form-group">
-                    {{ form.prize.label_tag }}
-                    {{ form.prize|add_class:"form-control" }}
+                    {{ attendee_form.num_persons.label_tag }}
+                    {{ attendee_form.num_persons|add_class:"form-control" }}
+                    <div class="text-danger">{{ attendee_form.num_persons.errors }}</div>
                 </div>
+                <div class="form-group">
+                    {{ attendee_form.email.label_tag }}
+                    {{ attendee_form.email|add_class:"form-control"}}
+                    <div class="text-danger">{{ attendee_form.email.errors }}</div>
+                </div>
+                <div id="additional-persons-container">
+                    {% for person_form in person_forms %}
+                        <div class="form-group">
+                            <h4>Person {{ forloop.counter }}</h4>
+                            {{ person_form.name.label_tag }}
+                            {{ person_form.name|add_class:"form-control" }}
+
+                            <div class="text-danger">{{ person_form.name.errors }}</div>
+                        </div>
+                        <div class="form-group">
+                            {{ person_form.age.label_tag }}
+                            {{ person_form.age|add_class:"form-control" }}
+
+                            <div class="text-danger">{{ person_form.age.errors }}</div>
+                        </div>
+                        <div class="form-group">
+                            {{ person_form.gender.label_tag }}
+                            {{ person_form.gender|add_class:"form-control" }}
+
+                            <div class="text-danger">{{ person_form.gender.errors }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="unique_id" value="{{ unique_id }}">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const numPersonsInput = document.querySelector('input[name="num_persons"]');
+                    const container = document.getElementById('additional-persons-container');
+
+                    numPersonsInput.addEventListener('change', function() {
+                        const numPersons = parseInt(this.value, 10);
+
+                        // Clear any existing fields
+                        container.innerHTML = '';
+
+                        // Generate form fields based on the number of persons
+                        for (let i = 0; i < numPersons; i++) {
+                            const personDiv = document.createElement('div');
+                            personDiv.classList.add('form-group');
+                            personDiv.innerHTML = `
+                                <h4>Person ${i + 1}</h4>
+                                <div class="form-group">
+                                    <label for="person_${i}_name">Name</label>
+                                    <input type="text" name="person_${i}_name" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="person_${i}_age">Age</label>
+                                    <input type="number" name="person_${i}_age" class="form-control" >
+                                </div>
+                                <div class="form-group">
+                                    <label for="person_${i}_gender">Gender</label>
+                                    <select name="person_${i}_gender" class="form-control" >
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            `;
+                            container.appendChild(personDiv);
+                        }
+                    });
+                });
+            </script>
         </div>
     </div>
 {% endblock %}

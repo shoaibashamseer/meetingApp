@@ -1,9 +1,9 @@
-{% extends 'attendees/home.html' %}
+{% extends 'attendees/index.html' %}
 {% block title %}Already submitted{% endblock %}
 
 {% block content %}
-    <div class="alert alert-warning mt-5">
-        <h4 class="alert-heading">Warning!</h4>
+    <div class="container mt-5">
+        <h4>Hi {{ attendee.name }}</h4>
         <p>You have already submitted the form</p>
     </div>
 {% endblock %}

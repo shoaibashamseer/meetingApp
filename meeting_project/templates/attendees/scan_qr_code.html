@@ -1,0 +1,153 @@
+{% extends 'attendees/index.html' %}
+{% load static %}
+
+{% block title %}Scan QR Code{% endblock %}
+
+{% block extra_head %}
+    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+    <style>
+        #reader {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!--<h2>Scan QR Code</h2>
+    <div id="reader" style="width: 500px;"></div>
+    <div id='permission-message'></div>-->
+    <div class="container mt-4">
+        <h2 class="text-center">Scan QR Code</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div id="reader"></div>
+                <div id="permission-message"></div>
+            </div>
+
+        </div>
+        <!--<button id="go-to-dashboard" class="btn btn-primary mt-3"> Dashboard</button>-->
+    </div>
+
+    <script>
+        function extractUniqueId(url) {
+            try {
+                let match = url.match(/\/attendees\/form\/([^\/]+)/);
+                return match ? match[1] : null;
+            } catch (error) {
+                console.error('Error extracting unique ID:', error);
+                return null;
+            }
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Code scanned = ${decodedText}`, decodedResult);
+
+            let uniqueId = extractUniqueId(decodedText);
+            if (uniqueId) {
+                console.log(`Extracted unique ID: ${uniqueId}`);
+
+                let userRole = "{{ request.user.profile.role }}";
+                if (userRole === 'watchman') {
+                    window.location.href = `/attendees/check_in/${uniqueId}/`;
+                } else if (userRole === 'stall_keeper') {
+                    window.location.href = `/attendees/scan_attendee/${uniqueId}/`;
+                }
+            } else {
+                console.warn('Unique ID could not be extracted from the QR code data.');
+            }
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        window.onload = function() {
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", { fps: 10, qrbox: 250 });
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        };
+
+        function checkCameraPermissions() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    console.log('Camera permission granted.');
+                    document.getElementById('permission-message').innerText = 'Camera permission granted.';
+
+                    let html5QrcodeScanner = new Html5QrcodeScanner(
+                        "reader", { fps: 10, qrbox: 250 });
+                    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(error => {
+                    console.error('Camera permission denied.', error);
+                    document.getElementById('permission-message').innerText = 'Camera permission denied. Please enable camera access in your browser settings.';
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            let scanner;
+
+            function checkCameraPermissions() {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        startScanner();
+                    })
+                    .catch(function(err) {
+                        console.error("Camera access denied: ", err);
+                    });
+            }
+
+            function startScanner() {
+                if (scanner) {
+                    console.warn("Scanner already initialized.");
+                    return;
+                }
+
+                scanner = new Html5Qrcode("scanner-container");
+
+                scanner.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    qrCodeMessage => {
+                        console.log("QR Code detected: ", qrCodeMessage);
+                        window.location.href = `/attendees/scan_attendee/${encodeURIComponent(qrCodeMessage)}/`;
+                    },
+                    errorMessage => {
+                        console.error("QR Code scanning error: ", errorMessage);
+                    }
+                ).catch(err => {
+                    console.error("Failed to start QR Code scanner: ", err);
+                });
+            }
+
+            function stopScanner() {
+                if (!scanner) {
+                    console.warn("Scanner not initialized.");
+                    return;
+                }
+
+                scanner.stop().then(() => {
+                    scanner.clear();
+                    scanner = null;
+                }).catch(err => {
+                    console.error("Failed to stop QR Code scanner: ", err);
+                });
+            }
+
+            checkCameraPermissions();
+
+            document.getElementById("stop-scanner").addEventListener("click", stopScanner);
+
+
+        });
+
+    </script>
+
+{% endblock %}

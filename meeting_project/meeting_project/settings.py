@@ -15,7 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -26,13 +26,15 @@ SECRET_KEY = 'django-insecure-p0)j-@=8l6ln65+__tn&#a*s5=vq3^==xj)=7_ubfdc$1=g7p7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'attendees',
+    'phonenumber_field',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,14 +79,15 @@ WSGI_APPLICATION = 'meeting_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'meeting_db',
-        'USER': 'shamz',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'meeting_project_db',
+            'USER': 'db_user',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
     }
-}
+
 
 
 # Password validation
@@ -132,3 +135,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+LOGIN_URL = '/attendees/login/'
+LOGIN_REDIRECT_URL = '/attendees/stall_dashboard/'
+INTERNAL_IPS = ['127.0.0.1']
+PHONENUMBER_DEFAULT_REGION = 'IN'

@@ -1,0 +1,10 @@
+{% extends 'attendees/index.html' %}
+
+{% block title %}Scan Success{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Scan Successful</h1>
+    <p>{{ attendee.name }} has successfully been registered at {{ stall.name }}.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'attendees/index.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Watchman Dashboard</h2>
+
+    {% if attendee %}
+        <h4>Verified Attendee Details</h4>
+        <ul>
+            <li>Name: {{ attendee.name }} - {{ attendee.name_verified|yesno:"✔,✖" }}</li>
+            <li>Place: {{ attendee.place }} - {{ attendee.place_verified|yesno:"✔,✖" }}</li>
+            <li>Job: {{ attendee.job }} - {{ attendee.job_verified|yesno:"✔,✖" }}</li>
+            <li>Gender: {{ attendee.gender }} - {{ attendee.gender_verified|yesno:"✔,✖" }}</li>
+            <li>Phone: {{ attendee.phone }} - {{ attendee.phone_verified|yesno:"✔,✖" }}</li>
+            <li>Email: {{ attendee.email }} - {{ attendee.email_verified|yesno:"✔,✖" }}</li>
+            {% for person in persons %}
+            <li>Name : {{ person.name }}  - {{ person.verified|yesno:"✔,✖" }}</li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        <p>No attendee has been verified yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

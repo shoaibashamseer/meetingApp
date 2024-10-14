@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('attendees/', include('attendees.urls')),
-    path('', RedirectView.as_view(url='/attendees/generate_qr/', permanent=True)),
+    path('', RedirectView.as_view(url='/attendees/login/', permanent=True)),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
