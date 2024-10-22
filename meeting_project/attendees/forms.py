@@ -1,4 +1,5 @@
 from django import forms
+<<<<<<< HEAD
 from .models import Attendee,Person,Profile
 from django.contrib.auth.models import User
 from phonenumber_field.formfields import PhoneNumberField as FormPhoneNumberField
@@ -36,6 +37,11 @@ class UserRegistrationForm(forms.ModelForm):
             print("form is not committed")
 
         return user
+=======
+from .models import Attendee
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
 
 class AttendeeForm(forms.ModelForm):
 
@@ -43,6 +49,7 @@ class AttendeeForm(forms.ModelForm):
 
     class Meta:
         model = Attendee
+<<<<<<< HEAD
         fields = ['name', 'place', 'job', 'gender', 'phone','num_persons', 'email']
 
     num_persons = forms.IntegerField(min_value=0, label='Number of Persons')
@@ -91,3 +98,15 @@ class PersonVerificationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PersonVerificationForm, self).__init__(*args, **kwargs)
         self.fields['verified'].label = "Person Verified"
+=======
+        fields = ['name', 'place', 'job', 'phone', 'num_persons', 'prize']
+
+'''class ScanForm(forms.ModelForm):
+    class Meta:
+        model = Attendee  # Replace with the actual model you are using
+        fields = ['name', 'email', 'qr_code']  # Add fields relevant to your form'''
+
+class StallKeeperLoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb

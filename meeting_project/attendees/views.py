@@ -1,10 +1,17 @@
 import os
 from django.shortcuts import render, redirect, get_object_or_404
+<<<<<<< HEAD
 from .models import Attendee,StallVisit,Profile,Person
 from django.contrib.auth import authenticate, login
 from .forms import AttendeeForm,PersonForm,AttendeeVerificationForm, PersonVerificationForm,UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+=======
+from .models import Attendee,StallVisit,Stall
+from django.contrib.auth import authenticate, login
+from .forms import AttendeeForm,StallKeeperLoginForm
+from django.contrib.auth.decorators import login_required
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
 import qrcode
 import uuid
 from django.urls import reverse
@@ -14,6 +21,7 @@ from django.contrib import messages
 
 def home(request):
     return render(request, 'attendees/index.html')
+<<<<<<< HEAD
 
 def generate_qr_code(request):
     qr_codes = []
@@ -21,6 +29,19 @@ def generate_qr_code(request):
     for i in range(1):
         unique_id = str(uuid.uuid4())
         form_url =  request.build_absolute_uri(reverse('attendee_form', args=[unique_id]))
+=======
+
+def generate_qr_code(request):
+    unique_id = str(uuid.uuid4())
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(unique_id)
+    qr.make(fit=True)
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
 
         qr = qrcode.QRCode(
             version=1,
@@ -48,6 +69,16 @@ def generate_qr_code(request):
 
 
     return render(request, 'attendees/qr_code.html', {'qr_codes': qr_codes})
+
+
+def scan_qr(request):
+    # Handle QR code scanning logic to retrieve unique_id
+    # Example: Get unique_id from the QR code scanning process
+
+    unique_id = "your_unique_id_from_qr_scan"
+    # Redirect to the attendee_form view with the unique_id
+    return redirect('attendee_form', unique_id=unique_id)
+
 
 def attendee_form(request, unique_id):
 
@@ -192,6 +223,7 @@ def already_arrived(request):
 def already_submitted(request):
     return render(request, 'attendees/already_submitted.html')
 
+<<<<<<< HEAD
 
 @login_required
 def scan_qr_code(request):
@@ -212,10 +244,31 @@ def watchman_dashboard(request,unique_id):
         'attendee': attendee,
         'persons': persons,
     })
+=======
+@login_required
+def stall_keeper_login(request):
+    if request.method == 'POST':
+        form = StallKeeperLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('stall_dashboard')
+    else:
+        form = StallKeeperLoginForm()
+    return render(request, 'attendees/stall_keeper_login.html', {'form': form})
+
+@login_required
+def stall_dashboard(request):
+    return render(request, 'attendees/stall_dashboard.html')
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
 
 @login_required
 def scan_attendee(request, unique_id):
     try:
+<<<<<<< HEAD
         #attendee = Attendee.objects.get(unique_id=unique_id)
         attendee = Attendee.objects.filter(unique_id__startswith=unique_id[:5]).first()
         user_profile = request.user.profile
@@ -247,3 +300,14 @@ def stall_dashboard(request):
     except StallVisit.DoesNotExist:
         return render(request, 'attendees/stall_dashboard.html', {'error': 'Stall not found for this user.'})
 
+=======
+        attendee = Attendee.objects.get(unique_id=unique_id)
+        stall = Stall.objects.get(keeper=request.user)
+        StallVisit.objects.create(attendee=attendee, stall=stall)
+        return render(request, 'attendees/scan_success.html', {'attendee': attendee, 'stall': stall})
+    except Attendee.DoesNotExist:
+        return render(request, 'attendees/scan_failed.html', {'message': 'Attendee not found'})
+    except Stall.DoesNotExist:
+        return render(request, 'attendees/scan_failed.html', {'message': 'Stall not found'})
+
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb

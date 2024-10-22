@@ -1,4 +1,8 @@
 {% extends 'attendees/index.html' %}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
 {% load form_tags %}
 
 {% block title %}Attendee Form{% endblock %}
@@ -38,6 +42,7 @@
                     {{ attendee_form.num_persons|add_class:"form-control" }}
                     <div class="text-danger">{{ attendee_form.num_persons.errors }}</div>
                 </div>
+<<<<<<< HEAD
                 <div class="form-group">
                     {{ attendee_form.email.label_tag }}
                     {{ attendee_form.email|add_class:"form-control"}}
@@ -67,6 +72,9 @@
                     {% endfor %}
                 </div>
                 <input type="hidden" name="unique_id" value="{{ unique_id }}">
+=======
+                 <input type="hidden" name="unique_id" value="{{ unique_id }}">
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
 

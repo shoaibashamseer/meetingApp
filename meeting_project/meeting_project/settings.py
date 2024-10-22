@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'meeting_project.wsgi.application'
 
 DATABASES = {
     'default': {
+<<<<<<< HEAD
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'meeting_project_db',
             'USER': 'db_user',
@@ -86,6 +87,14 @@ DATABASES = {
             'HOST': 'localhost',
             'PORT': '3306',
         }
+=======
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'meeting_project_db',
+        'USER': 'db_user',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '3306',
+>>>>>>> 85a187678478d2f08d8ecfc2ee6880f581ccf9bb
     }
 
 
